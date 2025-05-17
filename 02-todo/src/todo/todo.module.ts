@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { TodoResolver } from './todo.resolver';
 
-@Module({})
+@Module({
+  providers: [TodoResolver]
+})
 export class TodoModule {}
