@@ -5,6 +5,7 @@ import { join } from 'path';
 import { HelloWorldModule } from './hello-world/hello-world.module';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { HelloWorldResolver } from './hello-world/hello-world.resolver';
+import { TodoModule } from './todo/todo.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { HelloWorldResolver } from './hello-world/hello-world.resolver';
         ApolloServerPluginLandingPageLocalDefault()
       ]
     }),
-    HelloWorldModule
+    HelloWorldModule,
+    TodoModule
   ],
   
   controllers: [],
