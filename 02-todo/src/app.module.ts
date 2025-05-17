@@ -18,6 +18,7 @@ import { HelloWorldResolver } from './hello-world/hello-world.resolver';
     }),
     HelloWorldModule
   ],
+  
   controllers: [],
   providers: [HelloWorldResolver],
 })
