@@ -9,8 +9,19 @@ export class TodoService {
     private todos: Todo[] = [
         { id: 1, description: 'Learn NestJS', done: false },
         { id: 2, description: 'Learn NestJS2', done: true },
-        { id: 3, description: 'Learn NestJS3', done: false }
+        { id: 3, description: 'Learn NestJS3', done: false },
+        { id: 4, description: 'Learn NestJS4', done: false }
     ];
+
+    get totalTodos() {
+        return this.todos.length;
+    }
+    get pendingTodos() {
+        return this.todos.filter(todo => todo.done === false).length;
+    }
+    get completedTodos() {
+        return this.todos.filter(todo => todo.done === true).length;
+    }
 
     findAll(statusArgs: StatusArgs): Todo[] {
         if(statusArgs.status === undefined) return this.todos.filter(todo => todo.done === statusArgs.status);
@@ -43,4 +54,5 @@ export class TodoService {
         this.todos = this.todos.filter(todo => todo.id !== id);
         return true;
     }    
+    
 }
