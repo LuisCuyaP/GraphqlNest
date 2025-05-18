@@ -20,6 +20,9 @@ export class TodoResolver {
         return this.todoService.findOne(id);
     }
 
+    //en un post solo son dos cosas que necesito
+    //1. que es lo que quiero retornar : el nuevo objeto Todo creado
+    //2. que dto es el que voy a enviar para la insercion de datos: el createTodoInput
     @Mutation(() => Todo, { name: 'createTodo' })
     createTodo(
         @Args('createTodoInput') createTodoInput: CreateTodoInput
