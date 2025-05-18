@@ -16,4 +16,5 @@ type Query {
   """Tendra un valor por defecto 6"""
   randomFromZeroTo(parameter1: Int): Int!
   todos: [Todo!]!
+  todo(id: Int): Todo!
 }
