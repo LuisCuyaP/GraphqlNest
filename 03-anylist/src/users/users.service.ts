@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -7,6 +7,8 @@ import { SignupInput } from 'src/auth/dto/inputs/signup.input';
 
 @Injectable()
 export class UsersService {
+
+  private logger = new Logger('UsersService');
 
   constructor(
     @InjectRepository(User)
@@ -19,7 +21,7 @@ export class UsersService {
       await this.usersRepository.save(newUser);
       return newUser;
     } catch (error) {
-      throw new Error('Error creating user');
+      this.handleDBErrors(error);
     }
   }
   async findAll(): Promise<User[]> {
@@ -36,5 +38,15 @@ export class UsersService {
 
   block(id: string): Promise<User> {
     throw new Error(`This action returns a #${id} user`);
+  }
+
+  private handleDBErrors(error: any): never {
+    if (error.code === '23505') {
+      throw new Error(error.detail.replace('Key', ''));
+    }
+
+    this.logger.error(error);
+
+    throw new InternalServerErrorException('Please check server logs');
   }
 }
