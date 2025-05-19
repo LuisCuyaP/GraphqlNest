@@ -5,8 +5,7 @@ import { LoginInput, SignupInput } from './dto/inputs';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class AuthService {
-    
+export class AuthService {    
     constructor(
         private readonly usersService: UsersService
     ){}
@@ -21,7 +20,6 @@ export class AuthService {
         const user = await this.usersService.findOneByEmail(loginInput.email);
         if(!bcrypt.compareSync(loginInput.password, user.password))
             throw new BadRequestException('Password is incorrect');
-
 
         return { user, token: 'ABC123' };
     }
