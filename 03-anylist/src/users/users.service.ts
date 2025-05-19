@@ -32,8 +32,13 @@ export class UsersService {
     return [];
   }
 
-  findOne(id: string): Promise<User> {
-    throw new Error(`This action returns a #${id} user`);
+  async findOneByEmail(email: string): Promise<User> {
+    try{
+      //return await this.usersRepository.findOneOrFail({ email });
+      return await this.usersRepository.findOneOrFail({ where: { email } });
+    }catch(error){
+      this.handleDBErrors(error);
+    }
   }
 
   update(id: number, updateUserInput: UpdateUserInput) {
