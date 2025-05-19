@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -34,10 +34,12 @@ export class UsersService {
 
   async findOneByEmail(email: string): Promise<User> {
     try{
-      //return await this.usersRepository.findOneOrFail({ email });
       return await this.usersRepository.findOneOrFail({ where: { email } });
     }catch(error){
-      this.handleDBErrors(error);
+      this.handleDBErrors({
+        code: 'error-001',
+        detail: `User with email ${email} not found`
+      });
     }
   }
 
@@ -51,11 +53,12 @@ export class UsersService {
 
   private handleDBErrors(error: any): never {
     if (error.code === '23505') {
-      throw new Error(error.detail.replace('Key', ''));
+      throw new BadRequestException(error.detail.replace('Key', ''));
     }
-
+    if (error.code === 'error-001') {
+      throw new BadRequestException(error.detail.replace('Key', ''));
+    }
     this.logger.error(error);
-
     throw new InternalServerErrorException('Please check server logs');
   }
 }
