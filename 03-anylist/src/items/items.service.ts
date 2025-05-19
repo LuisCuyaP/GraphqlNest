@@ -17,19 +17,33 @@ export class ItemsService {
     return newItem;
   }
 
-  findAll() {
-    return [];
+  async findAll(): Promise<Item[]> {
+    return this.itemsRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} item`;
+  async findOne(id: string): Promise<Item> {
+    const item = await this.itemsRepository.findOneBy({id});
+    if (!item) {
+      throw new Error(`Item with id ${id} not found`);
+    }
+    return item;
   }
 
-  update(id: number, updateItemInput: UpdateItemInput) {
-    return `This action updates a #${id} item`;
+  async update(id: string, updateItemInput: UpdateItemInput): Promise<Item> {
+    //const item = await this.itemsRepository.preload(updateItemInput);
+    const item = await this.itemsRepository.findOneBy({ id });
+    if (!item) {
+      throw new Error(`Item with id ${id} not found`);
+    }
+    item.name = updateItemInput.name ? updateItemInput.name : item.name;
+    item.quantity = updateItemInput.quantity ? updateItemInput.quantity : item.quantity;
+    item.quantityUnits = updateItemInput.quantityUnits ? updateItemInput.quantityUnits : item.quantityUnits;
+    return this.itemsRepository.save(item);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} item`;
+  async remove(id: string): Promise<Item> {
+    const item = await this.findOne(id);
+    await this.itemsRepository.remove(item);
+    return { ...item, id };
   }
 }
