@@ -30,7 +30,13 @@ export class UsersService {
     }
   }
   async findAll(roles: ValidRoles[]): Promise<User[]> {
-    if(roles.length === 0) return this.usersRepository.find();
+    if(roles.length === 0) 
+      return this.usersRepository.find({
+       // no es necesario ya que en la entidad de user se uso la propiedad lazy
+       /*  relations: {
+          lastUpdatedBy: true
+        } */
+      });
 
     return this.usersRepository.createQueryBuilder()
       .andWhere('ARRAY[roles] && ARRAY[:...roles]')
@@ -64,8 +70,11 @@ export class UsersService {
     return `This action updates a #${id} user`;
   }
 
-  block(id: string): Promise<User> {
-    throw new Error(`This action returns a #${id} user`);
+  async block(id: string, adminUser: User): Promise<User> {
+    const userToBlock = await this.findOneById(id);
+    userToBlock.isActive = false;
+    userToBlock.lastUpdatedBy = adminUser;
+    return this.usersRepository.save(userToBlock);
   }
 
   private handleDBErrors(error: any): never {
