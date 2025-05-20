@@ -32,8 +32,7 @@ export class AuthResolver {
   revalidateToken(
     @CurrentUser() user: User
   ): AuthResponse {
-    //return this.authService.revalidateToken(user);
-    throw new Error('Method not implemented.');
+    return this.authService.revalidateToken(user);
   }
 
 }
