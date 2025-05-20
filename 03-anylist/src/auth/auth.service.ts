@@ -4,6 +4,7 @@ import { UsersService } from 'src/users/users.service';
 import { LoginInput, SignupInput } from './dto/inputs';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {    
@@ -25,10 +26,24 @@ export class AuthService {
     async login(loginInput: LoginInput): Promise<AuthResponse>{
         const user = await this.usersService.findOneByEmail(loginInput.email);
         
-        if(!bcrypt.compareSync(loginInput.password, user.password))
+        if(!bcrypt.compareSync(loginInput.password, user.password!))
             throw new BadRequestException('Password is incorrect');
 
         const token = this.getJwtToken(user.id);        
         return { token, user };
+    }
+
+    async validateUser(id: string): Promise<User>{
+        const user = await this.usersService.findOneById(id);
+        if(!user.isActive)
+            throw new BadRequestException(`User with id ${id} is not active`);
+        delete user.password;
+        console.log(user);
+        return user;
+    }
+
+    revalidateToken( user: User ): AuthResponse {
+        const token = this.getJwtToken( user.id );
+        return { token, user }
     }
 }
