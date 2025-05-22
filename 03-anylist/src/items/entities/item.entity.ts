@@ -24,7 +24,7 @@ export class Item {
 
   // primer paso. add relacion item com usuario
   // muchos item pertenecen a un usuario
-  @ManyToOne(() => User, (user) => user.items, { nullable: false })
+  @ManyToOne(() => User, (user) => user.items, { nullable: false, lazy: true })
   @Index('userId-index')
   @Field(() => User)
   user: User;
