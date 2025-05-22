@@ -3,6 +3,7 @@ import { CreateItemInput, UpdateItemInput } from './dto/inputs';
 import { Item } from './entities/item.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entities/user.entity';
 @Injectable()
 export class ItemsService {
   
@@ -11,14 +12,21 @@ export class ItemsService {
     private readonly itemsRepository: Repository<Item>,
   ) {}
   
-  async create(createItemInput: CreateItemInput): Promise<Item> {
-    const newItem = this.itemsRepository.create(createItemInput);
+  async create(createItemInput: CreateItemInput, user: User): Promise<Item> {
+    //destrcturar createItemInput y agregar el usuario (...createItemInput, user)
+    const newItem = this.itemsRepository.create({...createItemInput, user});
     await this.itemsRepository.save(newItem);
     return newItem;
   }
 
-  async findAll(): Promise<Item[]> {
-    return this.itemsRepository.find();
+  async findAll(user: User): Promise<Item[]> {
+    return this.itemsRepository.find({
+      where: {
+        user: {
+          id: user.id
+        }
+      }
+    });
   }
 
   async findOne(id: string): Promise<Item> {
@@ -36,7 +44,7 @@ export class ItemsService {
       throw new Error(`Item with id ${id} not found`);
     }
     item.name = updateItemInput.name ? updateItemInput.name : item.name;
-    item.quantity = updateItemInput.quantity ? updateItemInput.quantity : item.quantity;
+    //item.quantity = updateItemInput.quantity ? updateItemInput.quantity : item.quantity;
     item.quantityUnits = updateItemInput.quantityUnits ? updateItemInput.quantityUnits : item.quantityUnits;
     return this.itemsRepository.save(item);
   }
