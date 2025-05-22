@@ -1,5 +1,6 @@
 import { ObjectType, Field, ID, Float } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'items' })
 @ObjectType()
@@ -13,12 +14,18 @@ export class Item {
   @Field(()=> String)
   name: string;
 
-  @Column()
+/*   @Column()
   @Field(()=> Float)
   quantity: number;
-
+ */
   @Column({ nullable: true })
   @Field(()=> String, { nullable: true })
   quantityUnits?: string; // g, ml, kg, tsp
-  
+
+  // primer paso. add relacion item com usuario
+  // muchos item pertenecen a un usuario
+  @ManyToOne(() => User, (user) => user.items)
+  @Field(() => User)
+  user: User;
+
 }
