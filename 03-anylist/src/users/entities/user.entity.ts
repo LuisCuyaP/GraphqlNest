@@ -44,7 +44,7 @@ export class User {
 
   // segundo paso. add relacion con items
   //un usuario puede tener muchos(array de items) items
-  @OneToMany(() => Item, (item) => item.user)
+  @OneToMany(() => Item, (item) => item.user, { lazy: true })
   @Field(() => [Item])
   items: Item[];
 
