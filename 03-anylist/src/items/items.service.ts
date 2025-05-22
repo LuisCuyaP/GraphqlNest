@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateItemInput, UpdateItemInput } from './dto/inputs';
 import { Item } from './entities/item.entity';
 import { Repository } from 'typeorm';
@@ -45,15 +45,16 @@ export class ItemsService {
     return item;
   }
 
-  async update(id: string, updateItemInput: UpdateItemInput): Promise<Item> {
-    //const item = await this.itemsRepository.preload(updateItemInput);
-    const item = await this.itemsRepository.findOneBy({ id });
+  async update(id: string, updateItemInput: UpdateItemInput, user: User   ): Promise<Item> {
+    await this.findOne(id, user);
+    const item = await this.itemsRepository.preload(updateItemInput);
+    //const item = await this.itemsRepository.findOneBy({ id });
     if (!item) {
-      throw new Error(`Item with id ${id} not found`);
+      throw new NotFoundException(`Item with id ${id} not found`);
     }
-    item.name = updateItemInput.name ? updateItemInput.name : item.name;
+    //item.name = updateItemInput.name ? updateItemInput.name : item.name;
     //item.quantity = updateItemInput.quantity ? updateItemInput.quantity : item.quantity;
-    item.quantityUnits = updateItemInput.quantityUnits ? updateItemInput.quantityUnits : item.quantityUnits;
+    //item.quantityUnits = updateItemInput.quantityUnits ? updateItemInput.quantityUnits : item.quantityUnits;
     return this.itemsRepository.save(item);
   }
 
