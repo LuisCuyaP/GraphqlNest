@@ -41,14 +41,14 @@ export class ItemsResolver {
   @Mutation(() => Item)
   updateItem(@Args('updateItemInput') updateItemInput: UpdateItemInput,
   @CurrentUser() user: User
-): Promise<Item> {
+  ): Promise<Item> {
     return this.itemsService.update(updateItemInput.id, updateItemInput, user);
   }
 
   @Mutation(() => Item)
   removeItem(@Args('id', { type: () => ID }) id: string,
   @CurrentUser() user: User
-): Promise<Item> {
+  ): Promise<Item> {
     return this.itemsService.remove(id, user);
   }
 }
