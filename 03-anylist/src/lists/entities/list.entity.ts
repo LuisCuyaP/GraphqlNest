@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { ListItem } from 'src/list-item/entities/list-item.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'lists' })
 @ObjectType()
@@ -14,6 +15,7 @@ export class List {
   @Field(() => String)
   name: string;
 
+  // *********************** INIT ************************
   //¿una lista cuantos usuarios puede tener?
   //solo puede tener uno, esta lista le corresponde a un usuario
   //pueden ver muchas listas que le correspondan a ese mismo usuario
@@ -46,4 +48,14 @@ export class List {
       }
     }
   } */
+    // *********************** FINISH ************************
+
+  //una lista puede tener un unico list item, nooo, debe tener muchos listItem
+  //los listItem van a pertenecer una lista en particular
+  @OneToMany(() => ListItem, (listItem) => listItem.list, { lazy: true })
+  @Field(() => [ListItem])
+  listItem: ListItem  
+
+
+
 }
