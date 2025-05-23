@@ -13,6 +13,7 @@ import { ItemsModule } from 'src/items/items.module';
   ],
   exports: [
     UsersService, // Export UsersService if needed in other modules
+    TypeOrmModule
   ],
 })
 export class UsersModule {}
