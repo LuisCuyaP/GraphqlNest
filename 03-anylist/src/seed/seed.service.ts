@@ -72,7 +72,6 @@ export class SeedService {
       
           itemsPromises.push(this.itemsService.create(createItemInput, user));
         }
-      
         await Promise.all(itemsPromises);
       }
 }
