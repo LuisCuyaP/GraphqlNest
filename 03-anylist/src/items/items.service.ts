@@ -13,7 +13,7 @@ export class ItemsService {
   ) {}
   
   async create(createItemInput: CreateItemInput, user: User): Promise<Item> {
-    //destrcturar createItemInput y agregar el usuario (...createItemInput, user)
+    //destructurar createItemInput y agregar el usuario (...createItemInput, user)
     const newItem = this.itemsRepository.create({...createItemInput, user});
     await this.itemsRepository.save(newItem);
     return newItem;
