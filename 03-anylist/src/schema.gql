@@ -25,12 +25,19 @@ type AuthResponse {
   user: User!
 }
 
+type List {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Query {
   revalidate: AuthResponse!
   users(roles: [ValidRoles!] = []): [User!]!
   user(id: ID!): User!
   Allitems(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
   FindByitem(id: ID!): Item!
+  lists: [List!]!
+  list(id: Int!): List!
 }
 
 """Valid roles for the users"""
@@ -51,6 +58,9 @@ type Mutation {
 
   """Ejecuta la construccion de la base de datos"""
   executeSeed: Boolean!
+  createList(createListInput: CreateListInput!): List!
+  updateList(updateListInput: UpdateListInput!): List!
+  removeList(id: Int!): List!
 }
 
 input SignupInput {
@@ -82,4 +92,15 @@ input UpdateItemInput {
   name: String
   quantityUnits: String
   id: ID!
+}
+
+input CreateListInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateListInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
