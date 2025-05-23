@@ -8,6 +8,8 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum';
 import { UpdateUserInput } from './dto/update-user.input';
 import { ItemsService } from 'src/items/items.service';
+import { PaginationArgs, SearchArgs } from 'src/common/dto/args';
+import { Item } from 'src/items/entities/item.entity';
 
 @Resolver(() => User)
 @UseGuards(JwtAuthGuard)
@@ -54,5 +56,14 @@ export class UsersResolver {
     return this.itemsService.itemCountByUser(user);
   }
 
+  @ResolveField(() => [Item], { name: 'items' })
+  async getItemsByUser(
+    @CurrentUser([ValidRoles.admin]) adminUser: User,
+    @Parent() user: User,
+    @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs
+  ): Promise<Item[]> {
+    return this.itemsService.findAll(user, paginationArgs, searchArgs);
+  }
 
 }
