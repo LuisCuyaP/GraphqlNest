@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateItemInput, UpdateItemInput } from './dto/inputs';
 import { Item } from './entities/item.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { PaginationArgs } from 'src/common/dto/args/pagination.args';
+import { SearchArgs } from 'src/common/dto/args';
 @Injectable()
 export class ItemsService {
   
@@ -20,17 +21,30 @@ export class ItemsService {
     return newItem;
   }
 
-  async findAll(user: User, paginationArgs: PaginationArgs): Promise<Item[]> {
+  async findAll(user: User, paginationArgs: PaginationArgs, searchArgs: SearchArgs): Promise<Item[]> {
     const { offset, limit } = paginationArgs;
-    return this.itemsRepository.find({
+    const { search } = searchArgs;
+
+    const queryBuilder = this.itemsRepository.createQueryBuilder()
+      .where(`"userId" = :userId`, { userId: user.id })
+      .take(limit)
+      .skip(offset);
+
+    if(search)
+      queryBuilder.andWhere('LOWER(name) like :name', { name: `%${search.toLowerCase()}%` });  
+    // quiero que todo el valor de esa query retorne (getMany)  
+    return queryBuilder.getMany();
+    
+   /*  return this.itemsRepository.find({
       take: limit,
       skip: offset,
       where: {
         user: {
           id: user.id
-        }
+        },
+        name: Like(`%${ search?.toLowerCase() }%`)
       }
-    });
+    }); */
   }
 
   async findOne(id: string, user: User): Promise<Item> {
