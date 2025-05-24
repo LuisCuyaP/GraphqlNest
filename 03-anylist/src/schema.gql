@@ -2,19 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type ListItem {
-  id: ID!
-  quantity: Float!
-  completed: Boolean!
-}
-
-type List {
-  id: ID!
-  name: String!
-  user: User!
-  listItem: [ListItem!]!
-}
-
 type User {
   id: ID!
   fullName: String!
@@ -28,11 +15,26 @@ type User {
   lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
 }
 
+type List {
+  id: ID!
+  name: String!
+  user: User!
+  listItem: [ListItem!]!
+}
+
+type ListItem {
+  id: ID!
+  quantity: Float!
+  completed: Boolean!
+  item: Item!
+}
+
 type Item {
   id: ID!
   name: String!
   quantityUnits: String
   user: User!
+  listItem: [ListItem!]!
 }
 
 type AuthResponse {
