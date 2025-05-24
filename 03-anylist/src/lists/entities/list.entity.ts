@@ -53,7 +53,7 @@ export class List {
   //una lista puede tener un unico list item, nooo, debe tener muchos listItem
   //los listItem van a pertenecer una lista en particular
   @OneToMany(() => ListItem, (listItem) => listItem.list, { lazy: true })
-  @Field(() => [ListItem])
+  //@Field(() => [ListItem])
   listItem: ListItem  
 
 
