@@ -1,23 +1,26 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Item } from 'src/items/entities/item.entity';
-import { List } from 'src/lists/entities/list.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+
+import { Item } from './../../items/entities/item.entity';
+import { List } from './../../lists/entities/list.entity';
 
 @Entity('listItems')
+@Unique('listItem-item', ['list','item'])
 @ObjectType()
 export class ListItem {
-  
+
   @PrimaryGeneratedColumn('uuid')
-  @Field(() => ID)
+  @Field( () => ID )
   id: string;
 
   @Column({ type: 'numeric' })
-  @Field(() => Number)
+  @Field( () => Number )
   quantity: number;
 
   @Column({ type: 'boolean' })
-  @Field(() => Boolean)
+  @Field( () => Boolean )
   completed: boolean;
+
 
   //Relaciones
   //muchos lisItem en cuantas listas pueden aparecer?
